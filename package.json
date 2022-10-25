@@ -13,7 +13,8 @@
     "jest-html-reporter": "^3.4.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test-coverage": "jest --coverage" 
   },
   "keywords": [],
   "author": "",
