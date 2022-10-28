@@ -9,18 +9,18 @@
 // Je crée ma suite de test
 describe('Sample 1 Integration Test Suites', () => {
     // Je crée mon test
-    it('should display "Hello, Thomas"', () => {
+    it('should display "Hello, Valentin"', () => {
         // Je crée un nouveau noeud
         const $wrapper = document.createElement('div')
 
         // Je lui injecte du HTML
         $wrapper.innerHTML = `
             <div id="root">
-                <h1 data-testid="hello">Hello, Thomas</h1>
+                <h1 data-testid="hello">Hello, Valentin</h1>
             </div>
         `
 
         // Je test le resultat
-        expect(getByTestId($wrapper, "hello").textContent).toEqual("Hello, Thomas")
+        expect(getByTestId($wrapper, "hello").textContent).toEqual("Hello, Valentin")
     })
 })

@@ -104,3 +104,103 @@ ____________________________________________________
 Nous allons ici nous intéresser au formulaire de connexion. 
 - [Issue comprenant l’ensemble des cas de tests à réaliser]( https://s3.eu-west-1.amazonaws.com/course.oc-static.com/courses/7159306/Issue7.png) 
 
+
+# Réalisez vos premiers tests d’intégration avec Jest Test DOM / Testing Library
+
+
+1.	Découvrez les outils pour réaliser des tests d’intégration
+
+Nous allons nous servir d’un deuxième framework en plus de Jest : [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro/). 
+
+```
+•	Vous n’avez pas besoin de l’installer, vous l’avez déjà fait lors du  npm install   au début du cours. 
+•	Ce nouveau framework utilise des notations complémentaires à Jest.
+•	En fait, ce deuxième framework va nous aider à sélectionner des éléments sur le DOM.
+```
+
+- Fichier js/samples/integration/sample1.test.js : 
+
+```
+/**
+* @jest-environment jsdom
+*/
+
+// Ici j'importe DOM Test Library
+import {
+    getByTestId
+} from '@testing-library/dom'
+
+ 
+// Je crée ma suite de test
+describe('Sample 1 Integration Test Suites', () => {
+    // Je crée mon test
+    it('should display "Hello, Valentin"', () => {
+        // Je crée un nouveau noeud
+        const $wrapper = document.createElement('div')
+
+        // Je lui injecte du HTML
+        $wrapper.innerHTML = `
+            <div id="root">
+                <h1 data-testid="hello">Hello, Valentin h1>
+            </div>
+        `
+
+        // Je teste le resultat
+    expect(getByTestId($wrapper, "hello").textContent).toEqual("Hello, Valentin")
+    })
+
+})
+```
+Dans le code ci-dessus, je crée un nouveau nœud, je lui injecte mon HTML et je regarde si le résultat du nœud contient bien le texte “Hello, Valentin”.  
+
+```
+•	 @jest-environment jsdom : ce commentaire est à mettre dès le début du fichier. Il permet d’indiquer qu’on va utiliser un environnement DOM. Si vous l’oubliez ou l’écrivez ailleurs dans le fichier, les tests ne vont pas passer.
+•	 import { getByTestId } from '@testing-library/dom' : importe la fonction getByTestId que vous allez utiliser pour récupérer un élément du DOM que vous avez créé.
+•	 <h1 data-testid="hello">Hello, Valentin</h1> : ajoute un attribut data-testid .  Nous allons nous servir de ce dernier avec getByTestId .
+•	 expect(getByTestId($wrapper, "hello").textContent).toEqual("Hello, Valentin ")  : récupère le nœud contenant le data-testid sur le nœud $wrapper, puis teste si le nœud comprend bien le texte “Hello, Valentin ”.
+```
+Vous devrez vous servir des méthodes telles que textContent  ou innerHTML  , ainsi que de nombreuses autres méthodes du JavaScript. Cela va vous permettre de continuer à pratiquer du Vanilla JavaScript. 
+
+-	Jest n’est pas suffisant ?
+
+En fait, Jest sait simuler un DOM grâce au commentaire  @jest-environment jsdom   . L’apport principal de testing-library est de faciliter la sélection des nœuds sur le DOM pour réaliser ces tests. Nous aurions tout à fait pu nous passer de cette librairie. 
+
+```
+Cela dit, cette solution présente de nombreux avantages :
+
+•	Si vous travaillez sur des applications React ou Vue, vous allez passer par “React Testing Library" ou “Vue Testing Library", qui s’utilisent de la même façon que “DOM Testing Library". Autrement dit, les commandes et outils que vous apprenez ici vont vous être utiles après. 
+•	Elle facilite grandement la sélection des éléments sur le DOM pour réaliser des tests. On gagne énormément de lignes de code grâce à cette librairie.
+•	Enfin, cette librairie est très légère ; elle prend peu de place sur votre projet, et nécessite peu de ressources.
+```
+
+Le projet Testing Library vise à simplifier la configuration des tests quel que soit le framework, et à uniformiser les tests.
+____________________________________________________
+2. Prenez en main Jest Test DOM/Testing Library
+
+- Découvrez Testing Library
+
+Testing Library fournit une API qui facilite la sélection d’éléments sur le DOM. Elle ne teste pas les résultats (c’est le rôle de Jest). Elle se compose des Queries et des Events.
+
+```
+Les Queries sont des fonctions qui récupèrent des nœuds sur la page. Il en existe environ une vingtaine :
+•	getByRole  vous permet de récupérer des nœuds via leur attribut rôle ; par exemple, le rôle   submit  pour  les boutons. Si vous souhaitez en récupérer plusieurs, vous pouvez utiliser la méthode getAllByRole  .
+•	getByLabelText   est particulièrement utile pour les formulaires où on utilise les balises label  avec les balises input  . Là encore, si vous souhaitez en récupérer plusieurs, vous pouvez utiliser la méthode getAllByLabelText  .
+•	getByAltText  est à utiliser pour les images qui ont des attributs alt  . 
+•	getByTestId  récupère des éléments via l’attribut data-testid  . Si vous souhaitez en récupérer plusieurs, il existe la méthode getAllByTestId  .
+```
+Enfin, en plus des méthodes getBy…, vous pouvez utiliser les méthodes queryBy et findBy. Ces dernières ne traitent pas de la même façon les cas d’erreur ; par exemple, quand aucun nœud n’est trouvé. Comme pour Jest, je vous invite à réaliser vos tests avec la [documentation des queries](https://testing-library.com/docs/queries/about/). 
+
+```
+Les Events correspondent aux événements que vous pouvez simuler sur le DOM, par exemple un clic de souris. Ici, vous passerez le plus souvent par la méthode fireEvent  ou click  .
+```
+-	Découvrez Jest Test DOM
+
+ Testing Library s’occupe de l’intégration de Jest Test DOM pour nous.  Jest Test DOM nous fournit des matchers de base de Jest, tels que :
+```
+1.	toBeDisabled  qui vérifie si un bouton a l’attribut disabled  ou non.
+2.	toBeRequired  qui vérifie si un nœud a l’attribut required.
+3.	toHaveAttribut  qui teste si un nœud a un attribut.
+```
+[Documentation complète de ces matchers](https://github.com/testing-library/jest-dom)
+
+- [Issue test des routeurs](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/courses/7159306/Issue8.png)
