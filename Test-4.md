@@ -54,3 +54,56 @@ Nous allons configurer Travis-CI pour qu’il teste les branches que nous souhai
 De manière générale, c’est souvent le développeur senior, le lead dev ou le devops de l’entreprise qui se chargera de mettre la CI en place. Mais vous voilà désormais capable de le faire ! 
 
 
+# Réalisez des tests End-to-End
+1.	Découvrez les tests E2E
+
+Les tests End-to-End (ou E2E) sont souvent la dernière étape dans le processus de test d’une application. 
+```
+Les tests E2E vérifient l’intégralité d’une application, du début, par exemple l’arrivée sur la page d’accueil et la phase de connexion, jusqu’à la fin. 
+Ils permettent de voir si l’application répond correctement.
+```
+
+Aujourd’hui, les applications sont des systèmes complexes qui sont interconnectés avec de nombreux sous-systèmes. Si l’un de ces sous-systèmes tombe en panne, c’est l’ensemble de l’application qui casse.
+
+```
+Plus un projet est complexe, plus il peut comprendre de sous-systèmes : 
+•	Au système de caching, c’est-à-dire le système qui permet de ne pas avoir à requêter la base de données pour des données fréquemment demandées ;
+•	Au système d’authentification, c’est-à-dire ce qui permet à l’utilisateur de créer un compte et de s’authentifier. Vous pouvez ici passer soit par des librairies, soit par des outils totalement automatisés tels qu’AWS Cognito.
+```
+
+
+```
+Enfin, les tests E2E peuvent être :
+•	Soit manuels. Autrement dit, quelqu’un de l’équipe, le développeur ou le Product Manager, va tester à la main la fonctionnalité, et regarder que le reste du projet n’a pas été cassé. Dans ce type de cas, il va utiliser un cas de test ;
+•	Soit automatiques. Autrement dit, le développeur va développer le test automatisé. En plus de faire passer le test sur la CI, il peut être intéressant de faire tourner ces tests à intervalles réguliers sur des serveurs ; par exemple, de rejouer les tests chaque heure, ou deux fois par jour. Cela permettra de rapidement voir si quelque chose ne marche pas comme prévu.
+```
+
+
+____________________________________________________
+2.	Élaborez votre cas de test
+
+
+```
+Chaque cas de test est souvent composé :
+•	D’une situation de départ (le Given). Cette situation permet de préciser d’où vous débutez ;
+•	D’une action (le When). Cela peut-être une action réalisée par l’utilisateur, ou un paramètre passé à une fonction ;
+•	D’un résultat (le Then), autrement dit comment doit se comporter l’application ou le code face à telle ou telle action.
+```
+Finalement, un cas de test est très proche d’une User Story.
+
+____________________________________________________
+3.	Utilisez Nightwatch pour réaliser vos tests E2E
+
+Pour réaliser des tests E2E automatisés, nous allons avoir besoin d’un framework de test E2E. Ici, nous utiliserons Nightwatch.
+
+Nightwatch est un framework de test E2E écrit en NodeJS, et utilisé par l’API WebDriver. 
+Il est assez simple à prendre en main et à utiliser, s'intègre parfaitement à l’écosystème “testing library”, et [sa documentation](https://nightwatchjs.org/) est plutôt claire. 
+
+
+
+-	Issue spécialement dédiée à [Nightwatch issue1](https://s3.eu-west-1.amazonaws.com/course.oc-static.com/courses/7159306/Issue1.png)
+
+Pensez à effectuer votre test sur le navigateur Chrome ou Firefox.
+
+
+
