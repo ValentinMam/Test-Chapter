@@ -239,5 +239,90 @@ Cela dit, attention, les snapshot tests ont deux limites :
 [Documentation Jest](https://jestjs.io/docs/snapshot-testing) sur ce type de test.
 
 
+# Allez plus loin dans la réalisation de vos tests
+
+Dans le monde professionnel, vous travaillez la plupart du temps avec des frameworks pour réaliser vos applications front-end, tels que React, Angular ou Vue.
+
+```
+Les bases que vous avez acquises pour rédiger des tests vous serviront quel que soit le framework sur lequel vous allez travailler. De plus, la rédaction des tests unitaires sera sensiblement la même entre vos différents projets.
+Cela dit, les tests d’intégration vont être en partie différents à réaliser. Ils vont utiliser des librairies différentes en fonction du framework que vous utilisez. Vous devriez néanmoins trouver des points communs dans leur rédaction (mots clés Describe  , it  , et les matchers). 
+```
+
+- JSX
+```
+import React from "react";
+import { render, unmountComponentAtNode } from "react-dom";
+import { act } from "react-dom/test-utils";
+
+import Hello from "./hello";
+
+let container = null;
+beforeEach(() => {
+    // setup a DOM element as a render target
+    container = document.createElement("div");
+    document.body.appendChild(container);
+});
+
+afterEach(() => {
+    // cleanup on exiting
+    unmountComponentAtNode(container);
+    container.remove();
+    container = null;
+});
+
+ 
+
+it("renders with or without a name", () => {
+act(() => {    render(<Hello />, container);  });  
+expect(container.textContent).toBe("Hey, stranger");
+
+act(() => {
+    render(<Hello name="Jenny" />, container);
+    });
+expect(container.textContent).toBe("Hello, Jenny!");
 
 
+act(() => {
+    render(<Hello name="Margaret" />, container);
+});
+expect(container.textContent).toBe("Hello, Margaret!");
+});
+```
+
+- TYPESCRIPT
+
+```
+@Component({
+selector: 'lightswitch-comp',
+template: `
+    <button (click)="clicked()">Click me!</button>
+    <span>{{message}}</span>`
+})
+
+export class LightswitchComponent {
+    isOn = false;
+    clicked() { this.isOn = !this.isOn; }
+    get message() { return `The light is ${this.isOn ? 'On' : 'Off'}`; }
+}
+
+describe('LightswitchComp', () => {
+    it('#clicked() should toggle #isOn', () => {
+        const comp = new LightswitchComponent();
+        expect(comp.isOn).toBe(false, 'off at first');
+        comp.clicked();
+        expect(comp.isOn).toBe(true, 'on after click');
+        comp.clicked();
+        expect(comp.isOn).toBe(false, 'off after second click');
+});
+
+ 
+
+it('#clicked() should set #message to "is on"', () => {
+    const comp = new LightswitchComponent();
+    expect(comp.message).toMatch(/is off/i, 'off at first');
+    comp.clicked();
+    expect(comp.message).toMatch(/is on/i, 'on after clicked');
+});
+
+});
+```
