@@ -107,3 +107,137 @@ Pensez à effectuer votre test sur le navigateur Chrome ou Firefox.
 
 
 
+# Identifiez les tests à réaliser par d’autres intervenants
+
+1.	Découvrez les tests QA
+
+```
+Les tests automatisés ne sont pas une fin en soi. 
+En effet, ils ne sont qu’une des briques de l’édifice vous permettant d’atteindre un niveau de qualité suffisant. 
+Quand une fonctionnalité est réalisée et s’apprête à être mise en production, on réalise souvent des tests dits QA, ou Quality Assurance (assurance qualité, en français). 
+Ces derniers sont très proches des tests E2E, mais peuvent être réalisés par des équipes dédiées.
+Si vous êtes dans une petite entreprise, il est possible que ce soient les développeurs ainsi que le Product Owner/Product Manager qui soient chargés de les réaliser.
+```
+
+
+____________________________________________________
+2.	Découvrez les autres types de tests
+
+
+-	Les Smoke Tests
+
+```
+Les Smoke Tests, ou tests de survie (ou aussi tests de fumée), sont des tests qui contrôlent les comportements critiques de votre application. S'ils ne passent pas, l’application ne peut pas être déployée.
+Ces tests permettent par exemple de voir si toutes les pages de votre application sont bien accessibles. Ils pourraient être utilisés dans le cadre de notre projet fil rouge. Cela dit, on s’en sert le plus souvent sur un projet qui comporte plusieurs dizaines de pages ou d’URL.
+```
+
+-	Les Snapshot Tests
+
+```
+Les snapshot tests sont très utilisés dans l'écosystème front-end : ils permettent de tester si un élément a changé. C'est-à-dire qu'ils vont se comporter comme une empreinte digitale, et vous avertir si cette empreinte a changé depuis la dernière fois.
+On va le plus souvent se servir de tests de snapshot pour des fonctions qui n’utilisent pas de paramètre et qui “se contentent” d’afficher du HTML.
+```
+
+Le code de l’en-tête =  js/common/header  , est un bon exemple :
+
+```
+const Header = {
+    render: () => {
+        return `
+        <header class="main-header">
+            <h1 class="main-header-title">
+                <a href="#/home">Façadia</a>
+            </h1>
+
+            <ul class="main-nav">
+                <li class="main-nav-item">
+                    <a class="main-nav-link" href="#/home">Accueil</a>
+                </li>
+
+                <li class="main-nav-item">
+                    <a class="main-nav-link" href="#">Le projet</a>
+                </li>
+
+                <li class="main-nav-item pr">
+                    <a class="main-nav-link" href="#/add-sensor">Ajouter un capteur</a>
+                </li>
+
+                <li class="main-nav-item">
+                    <a class="main-nav-link" href="/">Se Déconnecter</a>
+                </li>
+            </ul>
+        </header>
+`
+
+    }
+}
+```
+
+Pour réaliser un snapshot test, vous allez utiliser Jest et utiliser la méthode toMatchInlineSnapshot  .
+
+
+```
+import Header from "./index.js"
+
+describe('Header Snapshot Test Suites', () => {
+    it('should match snapshot', () => {
+        expect(Header.render()).toMatchInlineSnapshot()
+    })
+})
+```
+
+Une fois que le test sera passé, Jest va ajouter automatiquement du code pour vous à l’intérieur de la méthode toMatchInlineSnapshot  .
+
+```
+expect(Header.render()).toMatchInlineSnapshot(`
+
+"
+    <header class=\\"main-header\\">
+        <h1 class=\\"main-header-title\\">
+            <a href=\\"#/home\\">Façadia</a>
+        </h1>
+
+        <ul class=\\"main-nav\\">
+            <li class=\\"main-nav-item\\">
+                <a class=\\"main-nav-link\\" href=\\"#/home\\">Accueil</a>
+            </li>
+
+            <li class=\\"main-nav-item\\">
+                <a class=\\"main-nav-link\\" href=\\"#\\">Le projet</a>
+            </li>
+
+            <li class=\\"main-nav-item pr\\">
+                <a class=\\"main-nav-link\\" href=\\"#/add-sensor\\">Ajouter un capteur</a>
+            </li>
+
+            <li class=\\"main-nav-item\\">
+                <a class=\\"main-nav-link\\" href=\\"/\\">Se Déconnecter</a>
+            </li>
+        </ul>
+
+    </header>
+"
+`)
+```
+
+Essayez de changer le code du header, en supprimant par exemple le code contenu dans l’une des balises li , et vous allez voir que votre test va échouer. 
+
+```
+ Pour régénérer le snapshot, vous avez deux options :
+•	Utiliser la commande node_modules/.bin/jest -u :
+•	Cliquer sur le bouton  Replace them dans VSCode.
+```
+
+
+
+Cela dit, attention, les snapshot tests ont deux limites :
+```
+•	D’une part, ils ne testent pas la validité d’un élément. Si votre test ne passe pas, cela ne veut pas dire que quelque chose ne va pas. Cela veut juste dire que le code a changé depuis la dernière fois que le snapshot a été réalisé ;
+•	D’autre part, ils augmentent artificiellement la couverture de tests et ont tendance à fausser un peu cet indicateur.
+```
+
+[Documentation Jest](https://jestjs.io/docs/snapshot-testing) sur ce type de test.
+
+
+
+
